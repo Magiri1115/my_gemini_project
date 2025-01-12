@@ -1,4 +1,6 @@
 google-generativeai
 requests
 # その他必要なPythonパッケージ
-
+wordcloud
+matplotlib
+janome

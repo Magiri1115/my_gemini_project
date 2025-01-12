@@ -1,29 +1,45 @@
 const express = require('express');
 const router = express.Router();
+const {createScore, getScores, updateScore, deleteScore} = require('../models/score');
 
-// スコア登録
-router.post('/', (req, res) => {
-    // スコア登録処理
-    res.send('Score registered');
+router.post('/', async function(req, res) {
+    try {
+        const result = await createScore(req.body, req.app.get('pool'));
+        res.status(201).json(result);
+    } catch (error) {
+        console.error("error", error);
+        res.status(500).json({message: error.message});
+    }
 });
 
-// スコア取得
-router.get('/:userId', (req, res) => {
-    const userId = req.params.userId;
-    // スコア取得処理
-    res.send(`Scores for user ID: ${userId}`);
+router.get('/:userId', async function(req, res) {
+    try {
+        const result = await getScores(req.params.userId, req.app.get('pool'));
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("error", error);
+        res.status(500).json({message: error.message});
+    }
 });
 
-//スコア更新
-router.put('/:scoreId', (req, res) => {
-    const scoreId = req.params.scoreId;
-    res.send(`Score updated for ID: ${scoreId}`);
+router.put('/:scoreId', async function(req, res) {
+    try {
+        const result = await updateScore(req.params.scoreId, req.body, req.app.get('pool'));
+        res.status(200).json(result);
+    } catch (error) {
+        console.error("error", error);
+        res.status(500).json({message: error.message});
+    }
 });
 
-//スコア削除
-router.delete('/:scoreId', (req, res) => {
-    const scoreId = req.params.scoreId;
-    res.send(`Score deleted for ID: ${scoreId}`);
+router.delete('/:scoreId', async function(req, res) {
+    try {
+        const result = await deleteScore(req.params.scoreId, req.app.get('pool'));
+        res.status(200).json({message: '削除が完了しました'});
+    } catch (error) {
+        console.error("error", error);
+        res.status(500).json({message: error.message});
+    }
 });
 
 module.exports = router;
